@@ -1,12 +1,12 @@
 package com.ajinkyad.fragmentlifecycle.fragments;
 
-        import android.os.Bundle;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-        import com.ajinkyad.fragmentlifecycle.MainActivity;
-        import com.ajinkyad.fragmentlifecycle.R;
+import com.ajinkyad.fragmentlifecycle.MainActivity;
+import com.ajinkyad.fragmentlifecycle.R;
 
 public class FirstFragment extends ParentFragment {
 

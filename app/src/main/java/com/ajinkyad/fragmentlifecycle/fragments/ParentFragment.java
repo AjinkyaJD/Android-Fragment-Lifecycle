@@ -2,8 +2,11 @@ package com.ajinkyad.fragmentlifecycle.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -115,14 +118,49 @@ public class ParentFragment extends Fragment {
                 .NOTIFICATION_SERVICE);
 
         //Build the notification with the Title as the Activity Name and Description text as the activity life cycle method name
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getActivity())
-                .setSmallIcon(R.drawable.ic_launcher_background)
-                .setContentTitle(activityName)
-                .setContentText(methodName);
+        NotificationCompat.Builder notificationBuilder = null;
 
+
+        // There are hardcoding only for show it's just strings
+        String name = "package_channel";
+        String id = "channel_id"; // The user-visible name of the channel.
+        String description = "channel_description"; // The user-visible description of the channel.
+
+        if (notificationManager == null) {
+            notificationManager =
+                    (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = notificationManager.getNotificationChannel(id);
+            if (mChannel == null) {
+                mChannel = new NotificationChannel(id, name, importance);
+                mChannel.setDescription(description);
+                notificationManager.createNotificationChannel(mChannel);
+            }
+            notificationBuilder = new NotificationCompat.Builder(getActivity(), id);
+
+            notificationBuilder.setContentTitle(activityName)  // required
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentTitle(activityName)
+                    .setContentText(methodName)
+                    .setDefaults(Notification.DEFAULT_ALL);
+        } else {
+
+            notificationBuilder = new NotificationCompat.Builder(getActivity());
+
+            notificationBuilder.setContentTitle(activityName)  // required
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentTitle(activityName)
+                    .setContentText(methodName)
+                    .setDefaults(Notification.DEFAULT_ALL);
+        }
+
+        Notification notification = notificationBuilder.build();
         //Trigger the notification if the notificationManager object is created successfully
         if (notificationManager != null) {
-            notificationManager.notify((int) System.currentTimeMillis(), notificationBuilder.build());
+            notificationManager.notify((int) System.currentTimeMillis(), notification);
         }
 
     }
